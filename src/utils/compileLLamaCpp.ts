@@ -47,6 +47,9 @@ export async function compileLlamaCpp({
         if (toolchainFile != null)
             cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", toolchainFile);
 
+		if (process.env["CMAKE_TOOLCHAIN_FILE"] && process.env["CMAKE_TOOLCHAIN_FILE"] != "")
+			cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", process.env["CMAKE_TOOLCHAIN_FILE"] )
+
         for (const key in process.env) {
             if (key.startsWith(customCmakeOptionsEnvVarPrefix)) {
                 const option = key.slice(customCmakeOptionsEnvVarPrefix.length);
