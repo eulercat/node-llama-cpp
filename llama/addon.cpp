@@ -167,10 +167,10 @@ class LLAMAContext : public Napi::ObjectWrap<LLAMAContext> {
     }
 
     ctx = llama_new_context_with_model(model->model, context_params);
-    Napi::MemoryManagement::AdjustExternalMemory(Env(), llama_state_get_size(ctx));
+    Napi::MemoryManagement::AdjustExternalMemory(Env(), llama_get_state_size(ctx));
   }
   ~LLAMAContext() {
-    Napi::MemoryManagement::AdjustExternalMemory(Env(), -(int64_t)llama_state_get_size(ctx));
+    Napi::MemoryManagement::AdjustExternalMemory(Env(), -(int64_t)llama_get_state_size(ctx));
     llama_free(ctx);
     model->Unref();
   }
@@ -391,7 +391,7 @@ class LLAMAContextEvalWorker : Napi::AsyncWorker, Napi::Promise::Deferred {
     }
 
     if (use_grammar && (grammar_evaluation_state)->grammar != nullptr) {
-        llama_grammar_sample((grammar_evaluation_state)->grammar, ctx->ctx, &candidates_p);
+        llama_sample_grammar(ctx->ctx, &candidates_p, (grammar_evaluation_state)->grammar);
     }
 
     if (temperature <= 0) {
@@ -414,7 +414,7 @@ class LLAMAContextEvalWorker : Napi::AsyncWorker, Napi::Promise::Deferred {
     }
 
     if (new_token_id != eos_token && use_grammar && (grammar_evaluation_state)->grammar != nullptr) {
-        llama_grammar_accept_token((grammar_evaluation_state)->grammar, ctx->ctx, new_token_id);
+        llama_grammar_accept_token(ctx->ctx, (grammar_evaluation_state)->grammar, new_token_id);
     }
 
     result = new_token_id;

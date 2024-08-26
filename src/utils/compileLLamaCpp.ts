@@ -32,7 +32,10 @@ export async function compileLlamaCpp({
         if ((metal && process.platform === "darwin") || process.env.GGML_METAL === "1") cmakeCustomOptions.set("GGML_METAL", "1");
         else cmakeCustomOptions.set("GGML_METAL", "OFF");
 
-        if (cuda || process.env.GGML_CUDA === "1") cmakeCustomOptions.set("GGML_CUDA", "1");
+        if (cuda || process.env.GGML_CUDA === "1") {
+            // cmakeCustomOptions.set("GGML_CUDA", "1");
+            cmakeCustomOptions.set("LLAMA_CUBLAS", "1");
+        }
 
         if (process.env.GGML_OPENBLAS === "1") cmakeCustomOptions.set("GGML_OPENBLAS", "1");
         if (process.env.GGML_BLAS_VENDOR != null) cmakeCustomOptions.set("GGML_BLAS_VENDOR", process.env.GGML_BLAS_VENDOR);
@@ -47,8 +50,11 @@ export async function compileLlamaCpp({
         if (toolchainFile != null)
             cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", toolchainFile);
 
-		if (process.env["CMAKE_TOOLCHAIN_FILE"] && process.env["CMAKE_TOOLCHAIN_FILE"] != "")
-			cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", process.env["CMAKE_TOOLCHAIN_FILE"] )
+        if (process.env["CMAKE_TOOLCHAIN_FILE"] != null)
+            cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", process.env["CMAKE_TOOLCHAIN_FILE"]);
+
+        if (process.env["BUILD_SHARED_LIBS"] != null)
+            cmakeCustomOptions.set("BUILD_SHARED_LIBS", process.env["BUILD_SHARED_LIBS"]);
 
         for (const key in process.env) {
             if (key.startsWith(customCmakeOptionsEnvVarPrefix)) {
