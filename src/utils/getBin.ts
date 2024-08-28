@@ -50,6 +50,13 @@ export async function getPrebuildBinPath(): Promise<string | null> {
 export async function loadBin(): Promise<LlamaCppNodeModule> {
     const usedBinFlag = await getUsedBinFlag();
 
+    if (usedBinFlag === "systemBinaries") {
+        const modulePath = path.join("/usr/lib/nodejs", "llama-addon.node");
+        if (await fs.pathExists(modulePath)) {
+            return require(modulePath);
+        }
+    }
+
     if (usedBinFlag === "prebuiltBinaries") {
         const prebuildBinPath = await getPrebuildBinPath();
 
