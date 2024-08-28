@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import {usedBinFlagJsonPath} from "../config.js";
 
 type UsedBinFlagFile = {
-    use: "prebuiltBinaries" | "localBuildFromSource"
+    use: "prebuiltBinaries" | "localBuildFromSource" | "systemBinaries"
 };
 
 export async function getUsedBinFlag() {
