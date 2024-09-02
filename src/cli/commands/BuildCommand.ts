@@ -5,7 +5,7 @@ import fs from "fs-extra";
 import {compileLlamaCpp} from "../../utils/compileLLamaCpp.js";
 import withOra from "../../utils/withOra.js";
 import {clearTempFolder} from "../../utils/clearTempFolder.js";
-import {defaultLlamaCppCudaSupport, defaultLlamaCppMetalSupport, llamaCppDirectory} from "../../config.js";
+import {defaultLlamaCppCudaSupport, defaultLlamaCppMetalSupport, defaultLlamaCppVulkanSupport, llamaCppDirectory} from "../../config.js";
 import {downloadCmakeIfNeeded} from "../../utils/cmake.js";
 import withStatusLogs from "../../utils/withStatusLogs.js";
 import {getIsInDocumentationMode} from "../../state.js";
@@ -14,7 +14,8 @@ type BuildCommand = {
     arch?: string,
     nodeTarget?: string,
     metal?: boolean,
-    cuda?: boolean
+    cuda?: boolean,
+    vulkan?: boolean
 };
 
 export const BuildCommand: CommandModule<object, BuildCommand> = {
@@ -43,6 +44,11 @@ export const BuildCommand: CommandModule<object, BuildCommand> = {
                 type: "boolean",
                 default: defaultLlamaCppCudaSupport,
                 description: "Compile llama.cpp with CUDA support. Can also be set via the NODE_LLAMA_CPP_CUDA environment variable"
+            })
+            .option("vulkan", {
+                type: "boolean",
+                default: defaultLlamaCppVulkanSupport,
+                description: "Compile llama.cpp with Vulkan support. Can also be set via the NODE_LLAMA_CPP_VULKAN environment variable"
             });
     },
     handler: BuildLlamaCppCommand
@@ -52,7 +58,8 @@ export async function BuildLlamaCppCommand({
     arch = undefined,
     nodeTarget = undefined,
     metal = defaultLlamaCppMetalSupport,
-    cuda = defaultLlamaCppCudaSupport
+    cuda = defaultLlamaCppCudaSupport,
+    vulkan = defaultLlamaCppVulkanSupport
 }: BuildCommand) {
     if (!(await fs.pathExists(llamaCppDirectory))) {
         console.log(chalk.red('llama.cpp is not downloaded. Please run "node-llama-cpp download" first'));
@@ -67,6 +74,10 @@ export async function BuildLlamaCppCommand({
         console.log(`${chalk.yellow("CUDA:")} enabled`);
     }
 
+    if (vulkan) {
+        console.log(`${chalk.yellow("Vulkan:")} enabled`);
+    }
+
     await downloadCmakeIfNeeded(true);
 
     await withStatusLogs({
@@ -79,7 +90,8 @@ export async function BuildLlamaCppCommand({
             nodeTarget: nodeTarget ? nodeTarget : undefined,
             setUsedBinFlag: true,
             metal,
-            cuda
+            cuda,
+            vulkan
         });
     });
 

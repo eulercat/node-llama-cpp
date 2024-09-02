@@ -4,7 +4,8 @@ import path from "path";
 import process from "process";
 import fs from "fs-extra";
 import {
-    defaultLlamaCppCudaSupport, defaultLlamaCppGitHubRepo, defaultLlamaCppMetalSupport, defaultLlamaCppRelease, defaultSkipDownload,
+    defaultLlamaCppCudaSupport, defaultLlamaCppVulkanSupport,
+    defaultLlamaCppGitHubRepo, defaultLlamaCppMetalSupport, defaultLlamaCppRelease, defaultSkipDownload,
     llamaBinsDirectory
 } from "../config.js";
 import {DownloadLlamaCppCommand} from "../cli/commands/DownloadCommand.js";
@@ -86,7 +87,8 @@ export async function loadBin(): Promise<LlamaCppNodeModule> {
                 repo: defaultLlamaCppGitHubRepo,
                 release: defaultLlamaCppRelease,
                 metal: defaultLlamaCppMetalSupport,
-                cuda: defaultLlamaCppCudaSupport
+                cuda: defaultLlamaCppCudaSupport,
+                vulkan: defaultLlamaCppVulkanSupport
             });
 
             const modulePath = await getCompiledLlamaCppBinaryPath();

@@ -4,7 +4,7 @@ import {Octokit} from "octokit";
 import fs from "fs-extra";
 import chalk from "chalk";
 import {
-    defaultLlamaCppCudaSupport, defaultLlamaCppGitHubRepo, defaultLlamaCppMetalSupport, defaultLlamaCppRelease, isCI,
+    defaultLlamaCppCudaSupport, defaultLlamaCppVulkanSupport, defaultLlamaCppGitHubRepo, defaultLlamaCppMetalSupport, defaultLlamaCppRelease, isCI,
     llamaCppDirectory, llamaCppDirectoryTagFilePath
 } from "../../config.js";
 import {compileLlamaCpp} from "../../utils/compileLLamaCpp.js";
@@ -27,6 +27,7 @@ type DownloadCommandArgs = {
     nodeTarget?: string,
     metal?: boolean,
     cuda?: boolean,
+    vulkan?: boolean,
     skipBuild?: boolean,
     noBundle?: boolean,
 
@@ -101,6 +102,7 @@ export async function DownloadLlamaCppCommand({
     nodeTarget = undefined,
     metal = defaultLlamaCppMetalSupport,
     cuda = defaultLlamaCppCudaSupport,
+    vulkan = defaultLlamaCppVulkanSupport,
     skipBuild = false,
     noBundle = false,
     updateBinariesReleaseMetadataAndSaveGitBundle = false
@@ -118,6 +120,10 @@ export async function DownloadLlamaCppCommand({
 
         if (cuda) {
             console.log(`${chalk.yellow("CUDA:")} enabled`);
+        }
+
+        if (vulkan) {
+            console.log(`${chalk.yellow("Vulkan:")} enabled`);
         }
     }
     console.log();
@@ -192,7 +198,8 @@ export async function DownloadLlamaCppCommand({
                 nodeTarget: nodeTarget ? nodeTarget : undefined,
                 setUsedBinFlag: true,
                 metal,
-                cuda
+                cuda,
+                vulkan
             });
         });
     }

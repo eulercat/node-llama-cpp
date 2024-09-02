@@ -1,5 +1,7 @@
 import {
-    defaultLlamaCppCudaSupport, defaultLlamaCppGitHubRepo, defaultLlamaCppMetalSupport, defaultLlamaCppRelease
+    defaultLlamaCppCudaSupport, defaultLlamaCppGitHubRepo,
+    defaultLlamaCppMetalSupport, defaultLlamaCppVulkanSupport,
+    defaultLlamaCppRelease
 } from "../config.js";
 
 export async function getBuildDefaults() {
@@ -7,6 +9,7 @@ export async function getBuildDefaults() {
         repo: defaultLlamaCppGitHubRepo,
         release: defaultLlamaCppRelease,
         metalSupport: defaultLlamaCppMetalSupport,
-        cudaSupport: defaultLlamaCppCudaSupport
+        cudaSupport: defaultLlamaCppCudaSupport,
+        vulkanSupport: defaultLlamaCppVulkanSupport
     };
 }
