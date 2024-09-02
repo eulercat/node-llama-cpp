@@ -43,6 +43,9 @@ export const defaultLlamaCppMetalSupport = env.get("NODE_LLAMA_CPP_METAL")
 export const defaultLlamaCppCudaSupport = env.get("NODE_LLAMA_CPP_CUDA")
     .default("false")
     .asBool();
+export const defaultLlamaCppVulkanSupport = env.get("NODE_LLAMA_CPP_VULKAN")
+    .default("false")
+    .asBool();
 export const defaultSkipDownload = env.get("NODE_LLAMA_CPP_SKIP_DOWNLOAD")
     .default("false")
     .asBool();

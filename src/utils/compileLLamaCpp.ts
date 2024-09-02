@@ -15,9 +15,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export async function compileLlamaCpp({
     arch = process.arch, nodeTarget = process.version, setUsedBinFlag: setUsedBinFlagArg = true, metal = process.platform === "darwin",
-    cuda = false
+    cuda = false, vulkan = false
 }: {
-    arch?: string, nodeTarget?: string, setUsedBinFlag?: boolean, metal?: boolean, cuda?: boolean
+    arch?: string, nodeTarget?: string, setUsedBinFlag?: boolean, metal?: boolean, cuda?: boolean, vulkan?: boolean
 }) {
     try {
         if (!(await fs.pathExists(llamaCppDirectory))) {
@@ -33,6 +33,7 @@ export async function compileLlamaCpp({
         else cmakeCustomOptions.set("GGML_METAL", "OFF");
 
         if (cuda || process.env.GGML_CUDA === "1") cmakeCustomOptions.set("GGML_CUDA", "1");
+        if (vulkan || process.env.GGML_VULKAN === "1") cmakeCustomOptions.set("GGML_VULKAN", "1");
 
         if (process.env.GGML_OPENBLAS === "1") cmakeCustomOptions.set("GGML_OPENBLAS", "1");
         if (process.env.GGML_BLAS_VENDOR != null) cmakeCustomOptions.set("GGML_BLAS_VENDOR", process.env.GGML_BLAS_VENDOR);
