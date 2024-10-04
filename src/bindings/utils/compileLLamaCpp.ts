@@ -95,6 +95,10 @@ export async function compileLlamaCpp(buildOptions: BuildOptions, compileOptions
                     cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", process.env["CMAKE_TOOLCHAIN_FILE"]!.trim());
                 }
 
+                if (process.env["BUILD_SHARED_LIBS"]?.trim() ?? "") {
+                    cmakeCustomOptions.set("BUILD_SHARED_LIBS", process.env["BUILD_SHARED_LIBS"]!.trim());
+                }
+
                 if (ciMode) {
                     if (!cmakeCustomOptions.has("GGML_OPENMP"))
                         cmakeCustomOptions.set("GGML_OPENMP", "OFF");
