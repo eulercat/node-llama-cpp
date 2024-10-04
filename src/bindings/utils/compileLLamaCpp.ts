@@ -91,6 +91,10 @@ export async function compileLlamaCpp(buildOptions: BuildOptions, compileOptions
                 if (toolchainFile != null && !cmakeCustomOptions.has("CMAKE_TOOLCHAIN_FILE"))
                     cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", toolchainFile);
 
+                if (process.env["CMAKE_TOOLCHAIN_FILE"]?.trim() ?? "") {
+                    cmakeCustomOptions.set("CMAKE_TOOLCHAIN_FILE", process.env["CMAKE_TOOLCHAIN_FILE"]!.trim());
+                }
+
                 if (ciMode) {
                     if (!cmakeCustomOptions.has("GGML_OPENMP"))
                         cmakeCustomOptions.set("GGML_OPENMP", "OFF");
